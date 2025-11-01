@@ -1,0 +1,16 @@
+# Core
+django
+psycopg2-binary   # Conector do Postgres
+
+# Storage (Cloudflare R2)
+boto3
+django-storages
+
+# OCR
+pytesseract
+Pillow            # Para o pytesseract ler imagens
+pdf2image
+
+# Tarefas Assíncronas (para o OCR)
+celery
+redis

@@ -1,0 +1,62 @@
+services:
+  web:
+    build: .
+    # O comando original foi comentado temporariamente
+    command: python manage.py runserver 0.0.0.0:8000
+    # command: sleep infinity # Comando temporário para manter o contêiner vivo
+    volumes:
+      - ./src:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      # Lendo as variáveis do arquivo .env
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
+      - AWS_S3_ENDPOINT_URL=${AWS_S3_ENDPOINT_URL}
+
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      # O Postgres também usa as variáveis do .env
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+
+  redis:
+    image: redis:7-alpine
+
+  celeryworker:
+    build: .
+    command: celery -A portal worker -l info
+    volumes:
+      - ./src:/app
+    depends_on:
+      - web
+      - redis
+    environment:
+      # O Celery também precisa das mesmas variáveis
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
+      - AWS_S3_ENDPOINT_URL=${AWS_S3_ENDPOINT_URL}
+
+volumes:
+  postgres_data: # Volume para persistir os dados do banco

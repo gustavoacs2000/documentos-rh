@@ -1,0 +1,39 @@
+# Arquivo de segredos. NUNCA envie para o Git!
+.env
+
+# Arquivos de ambiente local (opcional)
+.env.local
+
+# Arquivos Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Pacotes e dependências
+venv/
+.venv/
+env/
+.env/
+build/
+dist/
+*.egg-info/
+
+# Banco de dados local (se usado para testes)
+db.sqlite3
+*.sql
+
+# Arquivos de IDE (IntelliJ, VSCode, etc.)
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+*.sqlite
+*.csv
+
+# Arquivos de OS
+.DS_Store
+Thumbs.db
