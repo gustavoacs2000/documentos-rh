@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Enviar {{ doc_type_name }}{% endblock %}
+
+{% block content %}
+    <h2>Enviar Documento: {{ doc_type_name }}</h2>
+    <p>Por favor, selecione o arquivo (PDF ou Imagem) do seu computador.</p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %} {{ form.as_p }}
+
+        <br>
+        <button type-="submit">Enviar Documento</button>
+    </form>
+
+    <br>
+    <a href="{% url 'dashboard' %}">&larr; Voltar para o Dashboard</a>
+{% endblock %}

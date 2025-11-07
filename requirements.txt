@@ -14,3 +14,9 @@ pdf2image
 # Tarefas Assíncronas (para o OCR)
 celery
 redis
+
+# Para criar a API
+djangorestframework
+
+# Para gerar a documentação (Swagger/Redoc)
+drf-spectacular

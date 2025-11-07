@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Dashboard{% endblock %}
+
+{% block content %}
+    <h2>Bem-vindo ao seu Dashboard, {{ nome_do_usuario }}!</h2>
+    <p>Este é o seu portal. Abaixo está o status dos seus documentos.</p>
+
+    <hr>
+
+    <h3>Status dos Documentos</h3>
+
+    <table border="1" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #f0f0f0;">
+                <th style="padding: 8px;">Documento</th>
+                <th style="padding: 8px;">Status</th>
+                <th style="padding: 8px;">Ação</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for doc in document_list %}
+                <tr>
+                    <td style="padding: 8px;">
+                        <strong>{{ doc.name }}</strong>
+                        <br>
+                        <small>{{ doc.description }}</small>
+                    </td>
+                    
+                    <td style="padding: 8px;">
+                        {% if doc.status == 'PENDENTE' %}
+                            <span style="color: gray;">Pendente</span>
+                        {% elif doc.status == 'APPROVED' or doc.status == 'REVIEW' %}
+                            <span style="color: green;">Enviado / Aprovado</span>
+                        {% elif doc.status == 'REJECTED' %}
+                            <span style="color: red;">Rejeitado</span>
+                        {% else %}
+                            <span style="color: blue;">{{ doc.status }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td style="padding: 8px;">
+                        {% if doc.status == 'PENDENTE' or doc.status == 'REJECTED' %}
+                            
+                            <a href="{% url 'document_upload' doc.doc_type_id %}">
+                                {% if doc.status == 'REJECTED' %}
+                                    Reenviar
+                                {% else %}
+                                    Enviar
+                                {% endif %}
+                            </a>
+
+                        {% else %}
+                            (N/A)
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

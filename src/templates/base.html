@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portal do Funcionário{% endblock %}</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 0; }
+        nav { background-color: #333; color: white; padding: 1rem; }
+        nav a { color: white; padding: 0.5rem; }
+        .container { max-width: 960px; margin: 1rem auto; padding: 1rem; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <span>Portal RH</span>
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}">Meu Dashboard</a>
+            <a href="{% url 'logout' %}">Sair ({{ user.username }})</a>
+        {% else %}
+            <a href="{% url 'login' %}">Entrar</a>
+        {% endif %}
+    </nav>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>

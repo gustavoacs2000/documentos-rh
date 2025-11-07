@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'storages',
     # Seus Apps Locais
     'documents',
+    # --- /docs ---
+    'rest_framework',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -62,7 +65,7 @@ ROOT_URLCONF = 'portal.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'], # <-- APONTA PARA A NOVA PASTAIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -164,3 +167,18 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'America/Sao_Paulo' # Opcional, mas recomendado
+
+# -----------------------------------------------------------------
+# CONFIGURAÇÃO DE AUTENTICAÇÃO
+# -----------------------------------------------------------------
+# Diz ao Django para onde redirecionar o usuário após um login bem-sucedido.
+# 'dashboard' é o 'name=' que definimos em 'documents/urls.py'
+LOGIN_REDIRECT_URL = 'dashboard'
+
+# (Opcional, mas bom ter) Para onde redirecionar após o logout
+LOGOUT_REDIRECT_URL = 'home' # 'home' é o name= da sua página inicial
+
+# Configuração da API (Django REST Framework)
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
