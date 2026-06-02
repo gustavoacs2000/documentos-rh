@@ -6,10 +6,11 @@ psycopg2-binary   # Conector do Postgres
 boto3
 django-storages
 
-# OCR
+# OCR / IA
 pytesseract
 Pillow            # Para o pytesseract ler imagens
 pdf2image
+google-generativeai # Integracao com Gemini para Verificacao Visual
 
 # Tarefas Assíncronas (para o OCR)
 celery

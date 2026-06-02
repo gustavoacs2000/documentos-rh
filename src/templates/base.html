@@ -5,16 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Portal do Funcionário{% endblock %}</title>
     <style>
-        body { font-family: sans-serif; margin: 0; padding: 0; }
-        nav { background-color: #333; color: white; padding: 1rem; }
-        nav a { color: white; padding: 0.5rem; }
-        .container { max-width: 960px; margin: 1rem auto; padding: 1rem; }
+        :root {
+            --bg: #f5f6fb;
+            --card: #ffffff;
+            --accent: #4b5bff;
+            --text: #1a1c23;
+            --muted: #6b7280;
+            --border: #e3e6ee;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+        nav {
+            background-color: var(--card);
+            color: var(--text);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+        }
+        nav .brand {
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            color: var(--text);
+        }
+        nav a {
+            color: var(--text);
+            padding: 0.35rem 0.65rem;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+        nav a:hover { background: rgba(75,91,255,0.08); }
+        .container {
+            max-width: 1180px;
+            margin: 1.5rem auto;
+            padding: 0 1.5rem 1.5rem;
+        }
     </style>
 </head>
 <body>
 
     <nav>
-        <span>Portal RH</span>
+        <span class="brand">Portal RH</span>
         {% if user.is_authenticated %}
             <a href="{% url 'dashboard' %}">Meu Dashboard</a>
             <a href="{% url 'logout' %}">Sair ({{ user.username }})</a>

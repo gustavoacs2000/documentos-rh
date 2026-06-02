@@ -3,59 +3,161 @@
 {% block title %}Meu Dashboard{% endblock %}
 
 {% block content %}
-    <h2>Bem-vindo ao seu Dashboard, {{ nome_do_usuario }}!</h2>
-    <p>Este é o seu portal. Abaixo está o status dos seus documentos.</p>
+<style>
+    .hero-strip {
+        background: linear-gradient(135deg, #1d2230, #121624);
+        color: #f5f7fa;
+        border-radius: 18px;
+        padding: 26px 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 14px 32px rgba(0,0,0,0.15);
+        margin-bottom: 20px;
+    }
+    .hero-strip h2 {
+        margin: 0 0 6px 0;
+        font-size: 26px;
+    }
+    .hero-strip p { margin: 0; color: #c5cbda; }
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 14px;
+        margin-bottom: 20px;
+    }
+    .stat-card {
+        background: #fff;
+        border-radius: 14px;
+        padding: 16px;
+        border: 1px solid #e3e6ee;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    }
+    .stat-card h4 { margin: 0 0 6px; font-size: 14px; color: #6b7280; }
+    .stat-card .value { font-size: 26px; font-weight: 800; color: #1a1c23; }
+    .stat-card.small { padding: 12px 14px; }
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+    }
+    .pill.pending { background: #f6f7fb; color: #6b7280; }
+    .pill.review { background: #e8ecff; color: #2f3fbf; }
+    .pill.approved { background: #e7f8ee; color: #1f8b4c; }
+    .pill.rejected { background: #ffecee; color: #b42318; }
+    .pill.processing { background: #fff5e6; color: #b25b00; }
 
-    <hr>
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+    }
+    .card {
+        background: #fff;
+        border: 1px solid #e3e6ee;
+        border-radius: 14px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        box-shadow: 0 10px 24px rgba(0,0,0,0.05);
+    }
+    .card h3 { margin: 0; font-size: 18px; }
+    .card p { margin: 0; color: #6b7280; font-size: 14px; }
+    .card .footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 6px;
+    }
+    .btn-link {
+        padding: 10px 14px;
+        border-radius: 10px;
+        border: 1px solid #dfe3ea;
+        background: #f8f9fe;
+        color: #2f3fbf;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: all 120ms ease;
+    }
+    .btn-link:hover {
+        background: #2f3fbf;
+        color: #fff;
+        border-color: #2f3fbf;
+        box-shadow: 0 10px 22px rgba(47,63,191,0.22);
+    }
+</style>
 
-    <h3>Status dos Documentos</h3>
+<section class="hero-strip">
+    <div>
+        <h2>Olá, {{ nome_do_usuario }}.</h2>
+        <p>Acompanhe seus documentos e envie o que estiver pendente.</p>
+    </div>
+    <div class="pill review">Portal de Documentos</div>
+    </section>
 
-    <table border="1" style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr style="background-color: #f0f0f0;">
-                <th style="padding: 8px;">Documento</th>
-                <th style="padding: 8px;">Status</th>
-                <th style="padding: 8px;">Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for doc in document_list %}
-                <tr>
-                    <td style="padding: 8px;">
-                        <strong>{{ doc.name }}</strong>
-                        <br>
-                        <small>{{ doc.description }}</small>
-                    </td>
-                    
-                    <td style="padding: 8px;">
-                        {% if doc.status == 'PENDENTE' %}
-                            <span style="color: gray;">Pendente</span>
-                        {% elif doc.status == 'APPROVED' or doc.status == 'REVIEW' %}
-                            <span style="color: green;">Enviado / Aprovado</span>
-                        {% elif doc.status == 'REJECTED' %}
-                            <span style="color: red;">Rejeitado</span>
-                        {% else %}
-                            <span style="color: blue;">{{ doc.status }}</span>
-                        {% endif %}
-                    </td>
+<section class="stats">
+    <div class="stat-card">
+        <h4>Total de documentos</h4>
+        <div class="value">{{ summary.total }}</div>
+    </div>
+    <div class="stat-card small">
+        <h4>Pendentes</h4>
+        <div class="value">{{ summary.pending }}</div>
+    </div>
+    <div class="stat-card small">
+        <h4>Em revisão</h4>
+        <div class="value">{{ summary.in_review }}</div>
+    </div>
+    <div class="stat-card small">
+        <h4>Aprovados</h4>
+        <div class="value">{{ summary.approved }}</div>
+    </div>
+    <div class="stat-card small">
+        <h4>Rejeitados</h4>
+        <div class="value">{{ summary.rejected }}</div>
+    </div>
+    <div class="stat-card small">
+        <h4>Processando</h4>
+        <div class="value">{{ summary.processing }}</div>
+    </div>
+</section>
 
-                    <td style="padding: 8px;">
-                        {% if doc.status == 'PENDENTE' or doc.status == 'REJECTED' %}
-                            
-                            <a href="{% url 'document_upload' doc.doc_type_id %}">
-                                {% if doc.status == 'REJECTED' %}
-                                    Reenviar
-                                {% else %}
-                                    Enviar
-                                {% endif %}
-                            </a>
-
-                        {% else %}
-                            (N/A)
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<section class="cards">
+    {% for doc in document_list %}
+        <div class="card">
+            <div>
+                <h3>{{ doc.name }}</h3>
+                <p>{{ doc.description }}</p>
+            </div>
+            <div class="footer">
+                <div>
+                    {% if doc.status == 'PENDENTE' %}
+                        <span class="pill pending">Pendente</span>
+                    {% elif doc.status == 'APPROVED' %}
+                        <span class="pill approved">Aprovado</span>
+                    {% elif doc.status == 'REJECTED' %}
+                        <span class="pill rejected">Rejeitado</span>
+                    {% elif doc.status == 'REVIEW' %}
+                        <span class="pill review">Em revisão</span>
+                    {% elif doc.status == 'UPLOADED' %}
+                        <span class="pill processing">Processando</span>
+                    {% else %}
+                        <span class="pill pending">{{ doc.status }}</span>
+                    {% endif %}
+                </div>
+                {% if doc.status in 'PENDENTE REJECTED UPLOADED' %}
+                    <a class="btn-link" href="{% url 'document_upload' doc.doc_type_id %}">
+                        {% if doc.status == 'REJECTED' %}Reenviar{% else %}Enviar{% endif %}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+</section>
 {% endblock %}

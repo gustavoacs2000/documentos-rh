@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect, get_object_or_404 # <-- CORREÇÃO APLICADA AQUI
-from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import (
     DocumentType,
@@ -8,9 +7,9 @@ from .models import (
 from .forms import DocumentUploadForm
 
 
-# Esta é a sua view 'home' que já existia
 def home_view(request):
-    return HttpResponse("Olá, mundo! O portal de funcionários funcionou.")
+    # Leva direto para a tela de login estilizada
+    return redirect("login")
 
 
 # -----------------------------------------------------------------
@@ -33,21 +32,41 @@ def dashboard_view(request):
 
     # 5. Prepara a lista final para o HTML
     document_list_for_html = []
-
+    summary = {
+        "total": 0,
+        "pending": 0,
+        "in_review": 0,
+        "approved": 0,
+        "rejected": 0,
+        "processing": 0,
+    }
     for doc_type in all_doc_types:
+        status = user_docs_status.get(doc_type.name, "PENDENTE")
         document_list_for_html.append(
             {
                 "name": doc_type.name,
                 "description": doc_type.description,
-                "status": user_docs_status.get(doc_type.name, "PENDENTE"),
+                "status": status,
                 "doc_type_id": doc_type.id 
             }
         )
+        summary["total"] += 1
+        if status == "PENDENTE":
+            summary["pending"] += 1
+        elif status == "REVIEW":
+            summary["in_review"] += 1
+        elif status == "APPROVED":
+            summary["approved"] += 1
+        elif status == "REJECTED":
+            summary["rejected"] += 1
+        elif status == "UPLOADED":
+            summary["processing"] += 1
 
     # O 'context' agora envia a lista completa para o template
     context = {
         "nome_do_usuario": current_user.username,
         "document_list": document_list_for_html,
+        "summary": summary,
     }
 
     # Renderiza o arquivo 'dashboard.html'

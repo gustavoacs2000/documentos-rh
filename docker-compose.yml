@@ -23,6 +23,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
       - AWS_S3_ENDPOINT_URL=${AWS_S3_ENDPOINT_URL}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
 
   db:
     image: postgres:15-alpine
@@ -57,6 +58,7 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
       - AWS_S3_ENDPOINT_URL=${AWS_S3_ENDPOINT_URL}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
 
 volumes:
   postgres_data: # Volume para persistir os dados do banco
